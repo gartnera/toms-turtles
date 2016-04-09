@@ -25,6 +25,8 @@ soup	{return soup;}
 instinct {return instinct;}
 endinstinct {return endinstinct;}
 forward		{strcpy( yylval.str, yytext);return forward;}
+left		{strcpy( yylval.str, yytext);return left;}
+right		{strcpy( yylval.str, yytext);return right;}
 write		{strcpy( yylval.str, yytext);return writeword;}
 color		{return color;}
 notrail		{strcpy( yylval.str, yytext);return notrail;}

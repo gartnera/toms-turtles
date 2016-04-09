@@ -1,2 +1,14 @@
-hatch
-soup
+hatch;
+instinct x;
+write;
+notrail;
+forward 20;
+instinct l;
+endinstinct;
+instinct l;
+write;
+notrail;
+forward 20;
+left 60;
+endinstinct;
+soup;
