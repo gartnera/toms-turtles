@@ -30,13 +30,15 @@ right		{strcpy( yylval.str, yytext);return right;}
 write		{strcpy( yylval.str, yytext);return writeword;}
 color		{return color;}
 notrail		{strcpy( yylval.str, yytext);return notrail;}
+turtle		{return turtle;}
+num			{return num;}
 {LETER}{1,30}	{
 					strcpy(yylval.str,yytext);
 					return name;
 				}
 {DIGIT}+			{	
 					strcpy(yylval.str,yytext);
-					return num;
+					return number;
 				}
 				
 
