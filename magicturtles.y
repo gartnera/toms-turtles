@@ -9,7 +9,7 @@
 typedef struct 
 {
  int ival;
- char str[500];
+ char str[1000];
 }tstruct ; 
 
 #define YYSTYPE  tstruct 
@@ -17,18 +17,82 @@ typedef struct
 %}
 
 
-%token	NAME
-%token  HATCH
-%token  SOUP
+%token	name
+%token  hatch
+%token  soup
+%token  temp
+%token	instinct
+%token	endinstinct
+%token	forward
+%token  writeword
+%token  notrail
+%token  color
+%token  num
 %%
 
 
-program
-   : HATCH SOUP { 
-                  printf("The Lord giveth turtles and the Lord Taketh turtles away\n");
+PROGRAM
+   : hatch ';' INSTINCTLIST soup ';' { 
                 }
    ;
 
+INSTINCTLIST
+	: INSTINCT INSTINCTLIST{
+							strcpy( $$.str, $1.str);
+							strcat( $$.str, $2.str);
+							}
+	|
+	;
+
+INSTINCT:
+	instinct name ';' INSTINCTCOMMANDLIST endinstinct ';'	{
+												printf("def %s(REPLACEWITHTURTLENAME):\n\t%s\n\n",$2.str,$4.str);
+											}
+	;
+
+INSTINCTCOMMANDLIST:
+	INSTINCTCOMMANDLIST INSTINCTCOMMAND	{
+		strcpy( $$.str, $1.str);
+		strcat( $$.str, $2.str);
+		strcat( $$.str, ";");
+		}
+	| INSTINCTCOMMAND	{strcpy( $$.str, $1.str);strcat( $$.str, ";");}
+	;
+INSTINCTCOMMAND:
+	  forward 	num ';' 	{strcpy( $$.str, $1.str);
+							 strcat( $$.str, "(");
+							 strcat( $$.str, "REPLACEWITHTURTLENAME");
+							 strcat( $$.str, ",");
+							 strcat( $$.str, $2.str);
+							 strcat( $$.str, ")");
+							 }
+	| writeword ';'			{strcpy( $$.str, $1.str);
+							 strcat( $$.str, "(");
+							 strcat( $$.str, "REPLACEWITHTURTLENAME");
+							 strcat( $$.str, ")");
+							 }
+	| color		COLOR ';'	{strcpy( $$.str, $1.str);
+							 strcat( $$.str, "(");
+							 strcat( $$.str, "REPLACEWITHTURTLENAME");
+							 strcat( $$.str, ",");
+							 strcat( $$.str, $2.str);
+							 strcat( $$.str, ")");
+							 }
+	| notrail	';'			{strcpy( $$.str, $1.str);
+						     strcat( $$.str, "(");
+							 strcat( $$.str, "REPLACEWITHTURTLENAME");
+							 strcat( $$.str, ")");}
+	| instinct	name ';'	{
+							 //currently doesn't check if instinct exists
+							 strcpy( $$.str, $2.str);
+						     strcat( $$.str, "(");
+							 strcat( $$.str, "REPLACEWITHTURTLENAME");
+							 strcat( $$.str, ")");
+							 }
+	;
+
+COLOR:
+;
 %%
 
 

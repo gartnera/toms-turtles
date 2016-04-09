@@ -18,21 +18,32 @@ DIGIT  [0-9]
 LETER [a-zA-Z]
 %%
 
+@@.*#	{}
 
-[+\-*/%();]	return yytext[0]; /* Pass Math Operators and Semi Colons through */
-
-hatch	{return HATCH;}
-soup	{return SOUP;}
+hatch	{return hatch;}
+soup	{return soup;}
+instinct {return instinct;}
+endinstinct {return endinstinct;}
+forward		{strcpy( yylval.str, yytext);return forward;}
+write		{strcpy( yylval.str, yytext);return writeword;}
+color		{return color;}
+notrail		{strcpy( yylval.str, yytext);return notrail;}
 {LETER}{1,30}	{
 					strcpy(yylval.str,yytext);
-					return NAME;
+					return name;
+				}
+{DIGIT}+			{	
+					strcpy(yylval.str,yytext);
+					return num;
 				}
 				
-				
-[ \t\n]     /* ignore whitespace */
+
 
 <<EOF>>   yyterminate();  /* signal end of dialogue */
 
+[ \t\n]     /* ignore whitespace */
+;	return yytext[0];
+[+\-*/%()]	return yytext[0]; /* Pass Math Operators and Semi Colons through */
 .        /* return yytext[0]; */
 
 %%
