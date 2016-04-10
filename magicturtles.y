@@ -48,6 +48,8 @@ PROGRAM
 			printf("%s",$4.str);
 			//dump commands
 			printf("%s",$5.str);
+			//closing turtle command
+			printf("turtle.done();");
 	   }
    ;
 
@@ -98,22 +100,24 @@ INSTINCTCOMMAND
 		}
 	| left number ';' 	
 		{
-			strcpy( $$.str, "\t\tself.turn");
+			strcpy( $$.str, "\t\tself.");
+			strcat( $$.str, $1.str);
 			strcat( $$.str, "(");
 			strcat( $$.str, $2.str);
 			strcat( $$.str, ")");
 		}
 	| right	number ';' 	
 		{
-			strcpy( $$.str, "\t\tturn");
-			strcat( $$.str, "(-");
+			strcpy( $$.str, "\t\tself.");
+			strcat( $$.str, $1.str);
+			strcat( $$.str, "(");
 			strcat( $$.str, $2.str);
 			strcat( $$.str, ")");
 		}
 	| writeword ';'			
 		{
 			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, $1.str);
+			strcat( $$.str, "pendown");
 			strcat( $$.str, "()");
 		}
 	| color	COLOR ';'	
@@ -127,7 +131,7 @@ INSTINCTCOMMAND
 	| notrail ';'			
 		{
 			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, $1.str);
+			strcat( $$.str, "penup");
 			strcat( $$.str, "()");
 		}
 	| instinct	name ';'	
@@ -214,14 +218,18 @@ COMMAND
 	| name left	number ';' 	
 		{
 			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".turn(");
+			strcat( $$.str, ".");
+			strcat( $$.str, $2.str);
+			strcat( $$.str, "(");
 			strcat( $$.str, $3.str);
 			strcat( $$.str, ");\n");
 		}
 	| name right number ';' 	
 		{
 			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".turn(-");
+			strcat( $$.str, ".");
+			strcat( $$.str, $2.str);
+			strcat( $$.str, "(");
 			strcat( $$.str, $3.str);
 			strcat( $$.str, ");\n");
 		}	
@@ -229,7 +237,7 @@ COMMAND
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, ".");
-			strcat( $$.str, $2.str);
+			strcat( $$.str, "pendown");
 			strcat( $$.str, "();\n");
 		}
 	| name color COLOR	';'	
@@ -245,7 +253,7 @@ COMMAND
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, ".");
-			strcat( $$.str, $2.str);
+			strcat( $$.str, "penup");
 			strcat( $$.str, "();\n");
 		}
 	| name instinct	name ';'
