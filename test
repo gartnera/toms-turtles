@@ -3,7 +3,6 @@ instinct z;
 write;
 notrail;
 forward 20;
-instinct l;
 endinstinct;
 instinct l;
 write;
