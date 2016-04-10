@@ -50,7 +50,7 @@ PROGRAM
 			//dump commands
 			printf("%s",$5.str);
 			//closing turtle command
-			printf("turtle.done();");
+			printf("turtle.done()\n");
 	   }
    ;
 
@@ -82,65 +82,10 @@ INSTINCTCOMMANDLIST
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, $2.str);
-			strcat( $$.str, "\n");
 		}
 	| INSTINCTCOMMAND	
 		{
 			strcpy( $$.str, $1.str);
-			strcat( $$.str, "\n");
-		}
-	;
-INSTINCTCOMMAND
-	: forward number ';' 	
-		{
-			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, $1.str);
-			strcat( $$.str, "(");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, ")");
-		}
-	| left number ';' 	
-		{
-			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, $1.str);
-			strcat( $$.str, "(");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, ")");
-		}
-	| right	number ';' 	
-		{
-			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, $1.str);
-			strcat( $$.str, "(");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, ")");
-		}
-	| writeword ';'			
-		{
-			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, "pendown");
-			strcat( $$.str, "()");
-		}
-	| color	colorstring ';'	
-		{
-			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, $1.str);
-			strcat( $$.str, "(\"");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, "\")");
-		}
-	| notrail ';'			
-		{
-			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, "penup");
-			strcat( $$.str, "()");
-		}
-	| instinct	name ';'	
-		{
-			//currently doesn't check if instinct exists
-			strcpy( $$.str, "\t\tself.");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, "()");
 		}
 	;
 	
@@ -195,7 +140,7 @@ NUMDECLERATION
 ;
 
 COMMANDLIST
-	: COMMANDLIST COMMAND
+	: COMMANDLIST NAMEDCOMMAND 
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, $2.str);
@@ -205,63 +150,49 @@ COMMANDLIST
 			strcpy( $$.str, "");
 		}
 	;
+
+NAMEDCOMMAND
+	: name COMMAND
+		{
+			sprintf($$.str, "%s.%s", $1.str, $2.str);
+		}
+	;
+INSTINCTCOMMAND
+	: COMMAND
+		{
+			sprintf($$.str, "\t\tself.%s", $1.str);
+		}
+	;
+
 COMMAND
-	: name forward number ';' 	
+	: forward number ';' 	
 		{
-			strcat( $$.str, ".");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, "(");
-			strcat( $$.str, $3.str);
-			strcat( $$.str, ");\n");
+			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
 		}
-	| name left	number ';' 	
+	| left	number ';' 	
 		{
-			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, "(");
-			strcat( $$.str, $3.str);
-			strcat( $$.str, ");\n");
+			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
 		}
-	| name right number ';' 	
+	| right number ';' 	
 		{
-			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, "(");
-			strcat( $$.str, $3.str);
-			strcat( $$.str, ");\n");
+			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
 		}	
-	| name writeword ';'
+	| writeword ';'
 		{
-			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".");
-			strcat( $$.str, "pendown");
-			strcat( $$.str, "();\n");
+			strcpy( $$.str, "pendown()\n");
 		}
-	| name color colorstring ';'	
+	| color colorstring ';'	
 		{
-			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, "(\"");
-			strcat( $$.str, $3.str);
-			strcat( $$.str, "\");\n");
+			sprintf($$.str, "%s(\"%s\")\n", $1.str, $2.str);
 		}
-	| name notrail	';'	
+	| notrail	';'	
 		{
-			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".");
-			strcat( $$.str, "penup");
-			strcat( $$.str, "();\n");
+			strcpy($$.str, "penup()\n");
 		}
-	| name instinct	name ';'
+	|  instinct	name ';'
 		{
 			//currently doesn't check if instinct exists
-			strcpy( $$.str, $1.str);
-			strcat( $$.str, ".");
-			strcat( $$.str, $3.str);
-			strcat( $$.str, "();\n");
+			sprintf($$.str, "%s()\n", $2.str);
 		} 
 	;
 %%
