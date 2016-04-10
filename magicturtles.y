@@ -52,7 +52,7 @@ PROGRAM
    ;
 
 INSTINCTLIST
-	: INSTINCT INSTINCTLIST
+	: INSTINCTLIST INSTINCT
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, $2.str);
@@ -66,7 +66,7 @@ INSTINCTLIST
 INSTINCT
 	: instinct name ';' INSTINCTCOMMANDLIST endinstinct ';'	
 		{
-			strcat($$.str, "\tdef ");
+			strcpy($$.str, "\tdef ");
 			strcat($$.str,$2.str);
 			strcat($$.str,"(self):\n");
 			strcat($$.str,$4.str);
