@@ -27,6 +27,7 @@ typedef struct
 %token  writeword
 %token  notrail
 %token  color
+%token  colorstring
 %token  number
 %token  right
 %token  left
@@ -120,13 +121,13 @@ INSTINCTCOMMAND
 			strcat( $$.str, "pendown");
 			strcat( $$.str, "()");
 		}
-	| color	COLOR ';'	
+	| color	colorstring ';'	
 		{
 			strcpy( $$.str, "\t\tself.");
 			strcat( $$.str, $1.str);
-			strcat( $$.str, "(");
+			strcat( $$.str, "(\"");
 			strcat( $$.str, $2.str);
-			strcat( $$.str, ")");
+			strcat( $$.str, "\")");
 		}
 	| notrail ';'			
 		{
@@ -142,9 +143,7 @@ INSTINCTCOMMAND
 			strcat( $$.str, "()");
 		}
 	;
-
-COLOR:
-;
+	
 DECLERATIONLIST
 	: TURTLEDECLERATIONLIST NUMDECLERATIONLIST 
 		{
@@ -240,14 +239,14 @@ COMMAND
 			strcat( $$.str, "pendown");
 			strcat( $$.str, "();\n");
 		}
-	| name color COLOR	';'	
+	| name color colorstring ';'	
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, ".");
-			strcat( $$.str, $1.str);
-			strcat( $$.str, "(");
 			strcat( $$.str, $2.str);
-			strcat( $$.str, ")l\n");
+			strcat( $$.str, "(\"");
+			strcat( $$.str, $3.str);
+			strcat( $$.str, "\");\n");
 		}
 	| name notrail	';'	
 		{

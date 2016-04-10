@@ -28,10 +28,11 @@ forward		{strcpy( yylval.str, yytext);return forward;}
 left		{strcpy( yylval.str, yytext);return left;}
 right		{strcpy( yylval.str, yytext);return right;}
 write		{strcpy( yylval.str, yytext);return writeword;}
-color		{return color;}
+color		{strcpy( yylval.str, yytext);return color;}
 notrail		{strcpy( yylval.str, yytext);return notrail;}
 turtle		{return turtle;}
 num			{return num;}
+((black)|(blue)|(green)|(red)|(white)|(purple)|(pink)|(orange)|(yellow)|(magenta)) {strcpy( yylval.str, yytext); return colorstring;}
 {LETER}{1,30}	{
 					strcpy(yylval.str,yytext);
 					return name;
