@@ -37,8 +37,8 @@ num			{return num;}
 					strcpy(yylval.str,yytext);
 					return name;
 				}
-{DIGIT}+			{	
-					strcpy(yylval.str,yytext);
+{DIGIT}+		{	
+					yylval.ival = atoi(yytext);
 					return number;
 				}
 				
@@ -48,7 +48,7 @@ num			{return num;}
 
 [ \t\n]     /* ignore whitespace */
 ;	return yytext[0];
-[+\-*/%()]	return yytext[0]; /* Pass Math Operators and Semi Colons through */
+[+\-*/%()^]	return yytext[0]; /* Pass Math Operators and Semi Colons through */
 .        /* return yytext[0]; */
 
 %%

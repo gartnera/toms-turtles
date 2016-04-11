@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
 #include "helpers.h"
 
 
@@ -166,17 +168,17 @@ INSTINCTCOMMAND
 	;
 
 COMMAND
-	: forward number ';' 	
+	: forward EXPRESSION ';' 	
 		{
-			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
+			sprintf($$.str, "%s(%d)\n", $1.str, $2.ival);
 		}
-	| left	number ';' 	
+	| left	EXPRESSION ';' 	
 		{
-			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
+			sprintf($$.str, "%s(%d)\n", $1.str, $2.ival);
 		}
-	| right number ';' 	
+	| right EXPRESSION ';' 	
 		{
-			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
+			sprintf($$.str, "%s(%d)\n", $1.str, $2.ival);
 		}	
 	| writeword ';'
 		{
@@ -196,6 +198,63 @@ COMMAND
 			sprintf($$.str, "%s()\n", $2.str);
 		} 
 	;
+
+EXPRESSION
+    : EXPRESSION '+' TERM
+        {
+            $$.ival = $1.ival + $3.ival;
+        }
+    | EXPRESSION '-' TERM
+        {
+            $$.ival = $1.ival - $3.ival;
+        }
+    | TERM
+        {
+            $$.ival = $1.ival;
+        }
+    ;
+
+TERM
+    : TERM '*' EXPONENT
+        {
+            $$.ival = $1.ival * $3.ival;
+        }
+    | TERM '/' EXPONENT
+        {
+            $$.ival = $1.ival / $3.ival;
+        }
+    | TERM '%' EXPONENT
+        {
+            $$.ival = $1.ival % $3.ival;
+        }
+    | EXPONENT
+        {
+            $$.ival = $1.ival;
+        }
+    ;
+
+EXPONENT
+    : FACTOR '^' EXPONENT
+        {
+            $$.ival = pow($1.ival, $3.ival);
+        }
+    | FACTOR
+        {
+            $$.ival = $1.ival;
+        }
+    ;
+
+FACTOR
+    : number
+        {
+            $$.ival = $1.ival;
+        }
+    | '(' EXPRESSION ')'
+        {
+            $$.ival = $2.ival;
+        }
+    ;
+
 %%
 
 

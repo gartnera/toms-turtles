@@ -1,6 +1,6 @@
 
 go: lex.yy.c magicturtles.tab.c 
-	gcc magicturtles.tab.c lex.yy.c -lfl -ly -o go 
+	gcc magicturtles.tab.c lex.yy.c -lfl -ly -lm -o go 
 
 lex.yy.c: magicturtles.l
 	flex -i magicturtles.l
