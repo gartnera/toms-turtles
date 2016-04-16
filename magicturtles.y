@@ -17,6 +17,8 @@ typedef struct
 
 #define YYSTYPE  tstruct 
 
+int lp=1;
+int lpcurr;
 %}
 
 
@@ -36,6 +38,8 @@ typedef struct
 %token  left
 %token	turtle
 %token  num
+%token	startdo
+%token	enddo
 %%
 
 
@@ -159,6 +163,11 @@ NAMEDCOMMAND
 		{
 			sprintf($$.str, "%s.%s", $1.str, $2.str);
 		}
+	| startdo number ';' NAMEDCOMMAND enddo ';'
+		{
+			lpcurr=lp++;
+			sprintf($$.str, "for tmp%d in range (0,%d):\n\t%s", lpcurr, $2.ival, $4.str);
+		}
 	;
 INSTINCTCOMMAND
 	: COMMAND
@@ -268,4 +277,3 @@ yyerror (char *s)  /* Called by yyparse on error */
 {
   printf ("\terror: %s\n", s);
 }
-

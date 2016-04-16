@@ -1,5 +1,3 @@
-
-
 %{
 
 typedef struct
@@ -33,6 +31,8 @@ notrail		{strcpy( yylval.str, yytext);return notrail;}
 turtle		{return turtle;}
 num			{return num;}
 ((black)|(blue)|(green)|(red)|(white)|(purple)|(pink)|(orange)|(yellow)|(magenta)) {strcpy( yylval.str, yytext); return colorstring;}
+do	{return startdo;}
+enddo	{return enddo;}
 {LETER}{1,30}	{
 					strcpy(yylval.str,yytext);
 					return name;
@@ -52,4 +52,3 @@ num			{return num;}
 .        /* return yytext[0]; */
 
 %%
-
