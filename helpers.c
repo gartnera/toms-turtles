@@ -33,7 +33,6 @@ void addsingletab(char * c)
 {
 	shiftRight(c);
 	c[0]='\t';
-	c++;
 }
 void replace(char * c)
 {
@@ -49,4 +48,6 @@ void replace(char * c)
 			addsingletab(end);
 		}
 	}
+	//always add tab to the beginning
+	addsingletab(c);
 }

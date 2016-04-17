@@ -166,8 +166,6 @@ NAMEDCOMMAND
 	| startdo number ';' COMMANDLIST enddo ';'
 		{
 			lpcurr=lp++;
-			indent($4.str);
-			
 			replace($4.str);
 			sprintf($$.str, "for tmp%d in range (0,%d):\n%s", lpcurr, $2.ival,$4.str);
 		}
