@@ -40,6 +40,7 @@ int lpcurr;
 %token  num
 %token	startdo
 %token	enddo
+%token  math
 %%
 
 
@@ -163,11 +164,11 @@ NAMEDCOMMAND
 		{
 			sprintf($$.str, "%s.%s", $1.str, $2.str);
 		}
-	| startdo number ';' COMMANDLIST enddo ';'
+	| startdo EXPRESSION ';' COMMANDLIST enddo ';'
 		{
 			lpcurr=lp++;
 			replace($4.str);
-			sprintf($$.str, "for tmp%d in range (0,%d):\n%s", lpcurr, $2.ival,$4.str);
+			sprintf($$.str, "for tmp%d in range (0,%s):\n%s", lpcurr, $2.str,$4.str);
 		}
 	;
 INSTINCTCOMMAND
@@ -180,15 +181,15 @@ INSTINCTCOMMAND
 COMMAND
 	: forward EXPRESSION ';' 	
 		{
-			sprintf($$.str, "%s(%d)\n", $1.str, $2.ival);
+			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
 		}
 	| left	EXPRESSION ';' 	
 		{
-			sprintf($$.str, "%s(%d)\n", $1.str, $2.ival);
+			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
 		}
 	| right EXPRESSION ';' 	
 		{
-			sprintf($$.str, "%s(%d)\n", $1.str, $2.ival);
+			sprintf($$.str, "%s(%s)\n", $1.str, $2.str);
 		}	
 	| writeword ';'
 		{
@@ -210,58 +211,28 @@ COMMAND
 	;
 
 EXPRESSION
-    : EXPRESSION '+' TERM
+    : EXPRESSION math FACTOR
         {
-            $$.ival = $1.ival + $3.ival;
-        }
-    | EXPRESSION '-' TERM
-        {
-            $$.ival = $1.ival - $3.ival;
-        }
-    | TERM
-        {
-            $$.ival = $1.ival;
-        }
-    ;
-
-TERM
-    : TERM '*' EXPONENT
-        {
-            $$.ival = $1.ival * $3.ival;
-        }
-    | TERM '/' EXPONENT
-        {
-            $$.ival = $1.ival / $3.ival;
-        }
-    | TERM '%' EXPONENT
-        {
-            $$.ival = $1.ival % $3.ival;
-        }
-    | EXPONENT
-        {
-            $$.ival = $1.ival;
-        }
-    ;
-
-EXPONENT
-    : FACTOR '^' EXPONENT
-        {
-            $$.ival = pow($1.ival, $3.ival);
+            sprintf($$.str, "%s %s %s", $1.str, $2.str, $3.str);
         }
     | FACTOR
         {
-            $$.ival = $1.ival;
+            sprintf($$.str, "%s", $1.str);
         }
     ;
 
 FACTOR
     : number
         {
-            $$.ival = $1.ival;
+            sprintf($$.str, "%s", $1.str);
+        }
+    | name
+        {
+            sprintf($$.str, "%s", $1.str);
         }
     | '(' EXPRESSION ')'
         {
-            $$.ival = $2.ival;
+            sprintf($$.str, "(%s)", $2.str);
         }
     ;
 
