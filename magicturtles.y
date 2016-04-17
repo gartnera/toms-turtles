@@ -41,6 +41,7 @@ int lpcurr;
 %token	startdo
 %token	enddo
 %token  math
+%token  is
 %%
 
 
@@ -153,6 +154,10 @@ COMMANDLIST
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, $2.str);
 		}
+    | COMMANDLIST VARIABLEOPERATION
+        {
+            sprintf($$.str, "%s%s", $1.str, $2.str);
+        }
 	|	
 		{
 			strcpy( $$.str, "");
@@ -171,6 +176,14 @@ NAMEDCOMMAND
 			sprintf($$.str, "for tmp%d in range (0,%s):\n%s", lpcurr, $2.str,$4.str);
 		}
 	;
+
+VARIABLEOPERATION
+    : name is EXPRESSION ';'
+        {
+            sprintf($$.str, "%s = %s\n", $1.str, $3.str);
+        }
+    ;
+
 INSTINCTCOMMAND
 	: COMMAND
 		{

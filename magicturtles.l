@@ -34,6 +34,7 @@ num			{return num;}
 ((black)|(blue)|(green)|(red)|(white)|(purple)|(pink)|(orange)|(yellow)|(magenta)) {strcpy( yylval.str, yytext); return colorstring;}
 do	{return startdo;}
 enddo	{return enddo;}
+is      {return is;}
 {LETER}{1,30}	{
 					strcpy(yylval.str,yytext);
 					return name;
