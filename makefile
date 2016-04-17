@@ -1,5 +1,5 @@
 
-go: lex.yy.c magicturtles.tab.c 
+go: lex.yy.c magicturtles.tab.c helpers.c
 	gcc magicturtles.tab.c lex.yy.c -lfl -ly -lm -o go 
 
 lex.yy.c: magicturtles.l

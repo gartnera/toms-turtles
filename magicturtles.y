@@ -163,10 +163,13 @@ NAMEDCOMMAND
 		{
 			sprintf($$.str, "%s.%s", $1.str, $2.str);
 		}
-	| startdo number ';' NAMEDCOMMAND enddo ';'
+	| startdo number ';' COMMANDLIST enddo ';'
 		{
 			lpcurr=lp++;
-			sprintf($$.str, "for tmp%d in range (0,%d):\n\t%s", lpcurr, $2.ival, $4.str);
+			indent($4.str);
+			
+			replace($4.str);
+			sprintf($$.str, "for tmp%d in range (0,%d):\n%s", lpcurr, $2.ival,$4.str);
 		}
 	;
 INSTINCTCOMMAND

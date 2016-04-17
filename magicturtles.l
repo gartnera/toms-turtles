@@ -9,6 +9,7 @@ typedef struct
 #define YYSTYPE  tstruct
 
 #include "magicturtles.tab.h"
+#include "helpers.c"
 
 %}
 
