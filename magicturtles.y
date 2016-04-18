@@ -153,7 +153,7 @@ NUMDECLERATION
 COMMANDLIST
 	: COMMANDLIST startdo EXPRESSION ';' COMMANDLIST enddo ';'
 		{
-			indent($4.str);
+			indent($5.str);
 			sprintf($$.str, "for i in range (0,%s):\n%s", $3.str,$5.str);
 		}
 	| COMMANDLIST NAMEDCOMMAND 
