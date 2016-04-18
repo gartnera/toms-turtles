@@ -16,7 +16,7 @@ void shiftRight(char* c)
 
 }
 
-void indent(char* c)
+void indentBlock(char* c)
 {
 	shiftRight(c);
 	c[0] = '\t';
@@ -34,7 +34,7 @@ void addsingletab(char * c)
 	shiftRight(c);
 	c[0]='\t';
 }
-void replace(char * c)
+void indent(char * c)
 {
 	int len;
 	char *end;

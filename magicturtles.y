@@ -17,9 +17,8 @@ typedef struct
 
 #define YYSTYPE  tstruct 
 
-int lp=1;
-int lpcurr;
 %}
+%error-verbose
 
 
 %token	name
@@ -78,23 +77,26 @@ INSTINCTLIST
 INSTINCT
 	: instinct name ';' INSTINCTCOMMANDLIST endinstinct ';'	
 		{
-			strcpy($$.str, "\tdef ");
-			strcat($$.str,$2.str);
-			strcat($$.str,"(self):\n");
-			strcat($$.str,$4.str);
-			strcat($$.str,"\n");
+			indent($4.str);
+			sprintf($$.str, "def %s(self):\n%s", $2.str, $4.str);
+			indent($$.str);
 		}
 	;
 
 INSTINCTCOMMANDLIST
-	: INSTINCTCOMMANDLIST INSTINCTCOMMAND	
+	: INSTINCTCOMMANDLIST startdo EXPRESSION ';' INSTINCTCOMMANDLIST enddo ';'
+		{
+			indent($5.str);
+			sprintf($$.str, "for i in range (0,%s):\n%s", $3.str,$5.str);
+		}
+	| INSTINCTCOMMANDLIST INSTINCTCOMMAND 
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, $2.str);
 		}
-	| INSTINCTCOMMAND	
+	|
 		{
-			strcpy( $$.str, $1.str);
+			strcpy( $$.str, "");
 		}
 	;
 	
@@ -149,7 +151,12 @@ NUMDECLERATION
 ;
 
 COMMANDLIST
-	: COMMANDLIST NAMEDCOMMAND 
+	: COMMANDLIST startdo EXPRESSION ';' COMMANDLIST enddo ';'
+		{
+			indent($4.str);
+			sprintf($$.str, "for i in range (0,%s):\n%s", $3.str,$5.str);
+		}
+	| COMMANDLIST NAMEDCOMMAND 
 		{
 			strcpy( $$.str, $1.str);
 			strcat( $$.str, $2.str);
@@ -158,24 +165,12 @@ COMMANDLIST
         {
             sprintf($$.str, "%s%s", $1.str, $2.str);
         }
-	|	
+	|
 		{
 			strcpy( $$.str, "");
 		}
 	;
 
-NAMEDCOMMAND
-	: name COMMAND
-		{
-			sprintf($$.str, "%s.%s", $1.str, $2.str);
-		}
-	| startdo EXPRESSION ';' COMMANDLIST enddo ';'
-		{
-			lpcurr=lp++;
-			replace($4.str);
-			sprintf($$.str, "for tmp%d in range (0,%s):\n%s", lpcurr, $2.str,$4.str);
-		}
-	;
 
 VARIABLEOPERATION
     : name is EXPRESSION ';'
@@ -184,10 +179,17 @@ VARIABLEOPERATION
         }
     ;
 
+NAMEDCOMMAND
+	: name COMMAND
+		{
+			sprintf($$.str, "%s.%s", $1.str, $2.str);
+		}
+	;
+
 INSTINCTCOMMAND
 	: COMMAND
 		{
-			sprintf($$.str, "\t\tself.%s", $1.str);
+			sprintf($$.str, "self.%s", $1.str);
 		}
 	;
 
