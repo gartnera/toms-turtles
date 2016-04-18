@@ -253,12 +253,12 @@ FACTOR
 
 
 
-main ()
+int main ()
 {
   yyparse ();
 }
 
-yyerror (char *s)  /* Called by yyparse on error */
+int yyerror (char *s)  /* Called by yyparse on error */
 {
   printf ("\terror: %s\n", s);
 }
