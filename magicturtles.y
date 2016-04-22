@@ -50,15 +50,15 @@ PROGRAM
 	   { 
 			printf("#!/usr/bin/env python\n");
 			printf("import turtle\n\n");
+			printf("class MyTurtle(turtle.Turtle):\n");
+			//add instincts
 			if(!(strcmp($3.str,"")==0))
 			{
-				printf("class MyTurtle(turtle.Turtle):\n");
-				//add instincts
 				printf("%s",$3.str);
 			}
 			else
 			{
-				//TODO: what happens when we have no instincts?
+				printf("\tpass\n");
 			}
 			//dump decs
 			printf("%s",$4.str);
