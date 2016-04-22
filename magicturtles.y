@@ -51,15 +51,9 @@ PROGRAM
 			printf("#!/usr/bin/env python\n");
 			printf("import turtle\n\n");
 			printf("class MyTurtle(turtle.Turtle):\n");
+			printf("\tdef __init__(self):\n\t\tsuper(MyTurtle,self).__init__()\n\t\tself.color(\"green\")\n");
 			//add instincts
-			if(!(strcmp($3.str,"")==0))
-			{
-				printf("%s",$3.str);
-			}
-			else
-			{
-				printf("\tpass\n");
-			}
+			printf("%s",$3.str);
 			//dump decs
 			printf("%s",$4.str);
 			//dump commands
@@ -137,8 +131,6 @@ TURTLEDECLERATION
 			{
 				strcpy( $$.str, $2.str);
 				strcat( $$.str, " = MyTurtle()\n");
-				strcat( $$.str, $2.str);
-				strcat( $$.str, ".color(\"green\")\n");
 				addlink($2.str,0);
 			}
 		}
@@ -225,7 +217,7 @@ NAMEDCOMMAND
 			}
 			else{
 				//implicit declaration of turtles
-				addlink($2.str,0);
+				addlink($1.str,0);
 				sprintf($$.str, "%s = MyTurtle()\n%s.%s",$1.str, $1.str, $2.str);
 			}
 		}

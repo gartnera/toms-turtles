@@ -1,6 +1,7 @@
 hatch;
 turtle bob;
 num k;
-bob color green;
 carl forward 20;
+bill left 180;
+bill forward 90;
 soup;
