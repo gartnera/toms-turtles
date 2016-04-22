@@ -1,0 +1,6 @@
+hatch;
+turtle bob;
+num k;
+bob color green;
+carl forward 20;
+soup;

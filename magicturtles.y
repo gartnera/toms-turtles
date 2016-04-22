@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "helpers.h"
 
 #include "helpers.h"
 
@@ -49,10 +50,16 @@ PROGRAM
 	   { 
 			printf("#!/usr/bin/env python\n");
 			printf("import turtle\n\n");
-			printf("class MyTurtle(turtle.Turtle):\n");
-
-			//add instincts
-			printf("%s",$3.str);
+			if(!(strcmp($3.str,"")==0))
+			{
+				printf("class MyTurtle(turtle.Turtle):\n");
+				//add instincts
+				printf("%s",$3.str);
+			}
+			else
+			{
+				//TODO: what happens when we have no instincts?
+			}
 			//dump decs
 			printf("%s",$4.str);
 			//dump commands
@@ -122,13 +129,18 @@ TURTLEDECLERATIONLIST
 TURTLEDECLERATION
 	: turtle name ';' 
 		{
-			strcpy( $$.str, $2.str);
-			strcat( $$.str, " = MyTurtle()\n");
-			/*
-			strcat( $$.str, " = MyTurtle('");
-			strcat( $$.str, $2.str);
-			strcat( $$.str, "')\n");
-			*/
+			if(inlink($2.str))
+			{
+				yyerror("Error Attempted Redeclaration");
+			}
+			else
+			{
+				strcpy( $$.str, $2.str);
+				strcat( $$.str, " = MyTurtle()\n");
+				strcat( $$.str, $2.str);
+				strcat( $$.str, ".color(\"green\")\n");
+				addlink($2.str,0);
+			}
 		}
 	;
 NUMDECLERATIONLIST
@@ -145,8 +157,16 @@ NUMDECLERATIONLIST
 NUMDECLERATION
 	: num name ';' 
 		{
-			strcpy( $$.str, $2.str);
-			strcat( $$.str, " = 0\n");
+			if(inlink($2.str))
+			{
+				yyerror("Error Attempted Redeclaration");
+			}
+			else
+			{
+				strcpy( $$.str, $2.str);
+				strcat( $$.str, " = 0\n");
+				addlink($2.str,1);
+			}
 		}
 ;
 
@@ -175,14 +195,39 @@ COMMANDLIST
 VARIABLEOPERATION
     : name is EXPRESSION ';'
         {
-            sprintf($$.str, "%s = %s\n", $1.str, $3.str);
+			if(inlink($1.str)){
+				if(gettype($1.str)==1){
+					sprintf($$.str, "%s = %s\n", $1.str, $3.str);
+				}
+				else
+				{
+					yyerror("incompatible types");
+				}
+			}
+			else
+			{
+				yyerror("Num was not declared");
+			}
         }
     ;
 
 NAMEDCOMMAND
 	: name COMMAND
 		{
-			sprintf($$.str, "%s.%s", $1.str, $2.str);
+			if(inlink($1.str)){
+				if(gettype($1.str)==0){
+					sprintf($$.str, "%s.%s", $1.str, $2.str);
+				}
+				else
+				{
+					yyerror("Turtle command attempted on non turtle");
+				}
+			}
+			else{
+				//implicit declaration of turtles
+				addlink($2.str,0);
+				sprintf($$.str, "%s = MyTurtle()\n%s.%s",$1.str, $1.str, $2.str);
+			}
 		}
 	;
 
@@ -243,7 +288,19 @@ FACTOR
         }
     | name
         {
-            sprintf($$.str, "%s", $1.str);
+			if(inlink($1.str)){
+				if(gettype($1.str)==1){
+					sprintf($$.str, "%s", $1.str);
+				}
+				else
+				{
+					yyerror("Used non number used in expression");
+				}
+			}
+			else
+			{
+				yyerror("Used name is undeclared");
+			}
         }
     | '(' EXPRESSION ')'
         {
@@ -263,4 +320,5 @@ int main ()
 int yyerror (char *s)  /* Called by yyparse on error */
 {
   printf ("\terror: %s\n", s);
+  exit(0);
 }

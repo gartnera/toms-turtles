@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 void shiftRight(char* c)
 {
@@ -50,4 +51,56 @@ void indent(char * c)
 	}
 	//always add tab to the beginning
 	addsingletab(c);
+}
+
+typedef struct link
+{
+ char str[2048];
+ int type;
+ struct link * next;
+}link;
+
+link * chain = NULL;
+
+void addlink(char * c,int t)
+{
+	//setup transversal
+	link * current = NULL;
+	
+	//create a new node
+	link * nn = malloc(sizeof(link));
+	strcpy(nn->str,c);
+	nn->type = t;
+	nn->next = NULL;
+	
+	//if first node 
+	if(chain==NULL){chain=nn;}else{
+		//else transverse and add
+		current=chain;
+		while(current->next!=NULL){
+			current=current->next;
+		}
+		//add nn to end;
+		current->next=nn;
+	}
+}
+int inlink(char * c){
+	link * current = chain;
+	while(current!=NULL){
+		if(strcmp(c,current->str)==0)
+			{return 1;}
+		else
+			{current=current->next;}
+	}
+	return 0;
+}
+int gettype(char * c){
+	link * current = chain;
+	while(current!=NULL){
+		if(strcmp(c,current->str)==0)
+			{return current->type;}
+		else
+			{current=current->next;}
+	}
+	return -1;
 }
