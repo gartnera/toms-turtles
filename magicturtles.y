@@ -51,7 +51,7 @@ PROGRAM
 			printf("#!/usr/bin/env python\n");
 			printf("import turtle\n\n");
 			printf("class MyTurtle(turtle.Turtle):\n");
-			printf("\tdef __init__(self):\n\t\tsuper(MyTurtle,self).__init__()\n\t\tself.color(\"green\")\n");
+			printf("\tdef __init__(self):\n\t\tsuper().__init__()\n\t\tself.color(\"green\")\n");
 			//add instincts
 			printf("%s",$3.str);
 			//dump decs
