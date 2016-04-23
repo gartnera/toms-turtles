@@ -77,10 +77,17 @@ INSTINCTLIST
 
 INSTINCT
 	: instinct name ';' INSTINCTCOMMANDLIST endinstinct ';'	
-		{
-			indent($4.str);
-			sprintf($$.str, "def %s(self):\n%s", $2.str, $4.str);
-			indent($$.str);
+		{	
+			if(inlink($2.str)){
+				yyerror("Attempted previously used name in instinct declaration");
+			}
+			else
+			{
+				addlink($2.str,2);
+				indent($4.str);
+				sprintf($$.str, "def %s(self):\n%s", $2.str, $4.str);
+				indent($$.str);
+			}
 		}
 	;
 
@@ -257,8 +264,13 @@ COMMAND
 		}
 	|  instinct	name ';'
 		{
-			//currently doesn't check if instinct exists
-			sprintf($$.str, "%s()\n", $2.str);
+			if(inlink($2.str) && (gettype($2.str)==2)){
+				sprintf($$.str, "%s()\n", $2.str);
+			}
+			else
+			{
+				yyerror("Instinct Undeclared");
+			}
 		} 
 	;
 
