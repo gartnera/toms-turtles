@@ -279,6 +279,10 @@ EXPRESSION
         {
             sprintf($$.str, "%s %s %s", $1.str, $2.str, $3.str);
         }
+	| EXPRESSION '^' FACTOR
+        {
+            sprintf($$.str, "%s ** %s", $1.str, $3.str);
+        }
     | FACTOR
         {
             sprintf($$.str, "%s", $1.str);

@@ -49,7 +49,8 @@ is      {return is;}
 
 [ \t\n]     /* ignore whitespace */
 ;	return yytext[0];
-[+\-*/%^]	{strcpy(yylval.str, yytext); return math;} /* Pass Math Operators and Semi Colons through */
+\^ {strcpy(yylval.str, yytext); return yytext[0];}
+[+\-*/%]	{strcpy(yylval.str, yytext); return math;} /* Pass Math Operators and Semi Colons through */
 [()]        return yytext[0];
 .        /* return yytext[0]; */
 
