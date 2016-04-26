@@ -13,7 +13,7 @@
 typedef struct 
 {
  int ival;
- char str[2048];
+ char str[10000];
 }tstruct ; 
 
 #define YYSTYPE  tstruct 
