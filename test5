@@ -1,0 +1,14 @@
+hatch;
+instinct star;
+do 5;
+forward 100;
+left 100+44;
+enddo;
+endinstinct;
+turtle bob;
+bob left (90*4)/2;
+do 24;
+bob instinct star;
+bob left 15;
+enddo;
+soup;

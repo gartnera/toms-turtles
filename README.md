@@ -23,7 +23,7 @@ Instinct Deceleration:
 	
 	instinct NAME;
 	@@Commands#
-	endinstinct
+	endinstinct;
 
 Turtle Deceleration:
 
