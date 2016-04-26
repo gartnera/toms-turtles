@@ -57,6 +57,6 @@ The same is not true for numbers. Referencing an undeclared number will cause a 
 
 Loop structure:
 
-	do EXPRESSION;
+	do NUMBER;
 	@@some commands#
 	enddo;

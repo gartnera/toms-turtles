@@ -92,7 +92,7 @@ INSTINCT
 	;
 
 INSTINCTCOMMANDLIST
-	: INSTINCTCOMMANDLIST startdo EXPRESSION ';' INSTINCTCOMMANDLIST enddo ';'
+	: INSTINCTCOMMANDLIST startdo number ';' INSTINCTCOMMANDLIST enddo ';'
 		{
 			indent($5.str);
 			sprintf($$.str, "%sfor i in range (0,%s):\n%s", $1.str,$3.str,$5.str);
@@ -170,7 +170,7 @@ NUMDECLERATION
 ;
 
 COMMANDLIST
-	: COMMANDLIST startdo EXPRESSION ';' COMMANDLIST enddo ';'
+	: COMMANDLIST startdo number ';' COMMANDLIST enddo ';'
 		{
 			indent($5.str);
 			sprintf($$.str, "%sfor i in range (0,%s):\n%s", $1.str,$3.str,$5.str);
